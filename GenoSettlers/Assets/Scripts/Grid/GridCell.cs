@@ -93,11 +93,18 @@ public class GridCell : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        Ray inputRay = Camera.main.ScreenPointToRay(eventData.position);
+        if (Physics.Raycast(inputRay, out RaycastHit hit))
+        {
+            GridPosition gridPosition = GridPosition.FromPixels(new Vector2(hit.point.x, hit.point.z));
+            Debug.Log(gridPosition);
+        }
+        
         _grid.MoveCameraTo(transform.position);
         //TODO Move somewhere to GameManager
         {
-            BuildingData buildingData = new BuildingData(Context.GameConfig.Buildings[0]);
-            _grid.AddCellObject(_cellData.Position, buildingData);
+            BuildingData buildingData = new BuildingData(_cellData.Position, Context.GameConfig.Buildings[0]);
+            _grid.AddCellObject(buildingData);
         }
     }
 

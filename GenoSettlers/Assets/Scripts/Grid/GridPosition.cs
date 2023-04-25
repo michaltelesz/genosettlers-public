@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Grid;
+using System;
 using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -57,5 +58,31 @@ public struct GridPosition : IEquatable<GridPosition>
     public override int GetHashCode()
     {
         return HashCode.Combine(this._q, this._r);
+    }
+
+    public static GridPosition FromPixels(Vector2 position)
+    {
+        float floatQ = position.x / (HexMetrics.outerRadius * 1.5f);
+        float floatR = position.y / (HexMetrics.innerRadius * 2f) - floatQ / 2;
+        float floatS = -floatQ - floatR;
+
+        int intQ = Mathf.RoundToInt(floatQ);
+        int intR = Mathf.RoundToInt(floatR);
+        int intS = Mathf.RoundToInt(floatS);
+
+        float dQ = Mathf.Abs(floatQ - intQ);
+        float dR = Mathf.Abs(floatR - intR);
+        float dS = Mathf.Abs(floatS - intS);
+
+        if(dQ > dR)
+        {
+            if(dQ > dS)
+            {
+                return new GridPosition(-intR - intS, intR);
+            }
+            return new GridPosition(intQ, intR);
+        }
+
+        return new GridPosition(intQ, -intQ - intS);
     }
 }

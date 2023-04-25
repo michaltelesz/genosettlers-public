@@ -1,23 +1,26 @@
+using Assets.Scripts.DataModels;
 using Assets.Scripts.Helpers.Interfaces;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Villager : MonoBehaviour
 {
-    private IVillagersManager _villagersManager;
+    private VillagerData _villagerData;
 
     private IWork _currentWork;
 
-    public void Setup(IVillagersManager manager)
+    public IWork CurrentWork => _currentWork;
+
+    internal void InvokeWorkStep()
     {
-        _villagersManager = manager;
+        //Debug.Log($"Villager: {name}, Work: {CurrentWork.GetType()}");
     }
 
-    private void Update()
+    internal bool SetWork(IWork work)
     {
-        if(_currentWork == null) {
-            _currentWork = _villagersManager.GetNextWork();
-        }
+        _currentWork = work;
+        return _currentWork != null;
     }
 }

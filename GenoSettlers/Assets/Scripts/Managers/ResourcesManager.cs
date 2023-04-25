@@ -1,3 +1,5 @@
+using Assets.Scripts.DataModels;
+using Assets.Scripts.Helpers.Interfaces;
 using Assets.Scripts.Interfaces;
 using System;
 using System.Collections;
@@ -24,5 +26,7 @@ namespace Assets.Scripts.Managers
     public class ResourceData
     {
         public int resourceId;
+        public IResourceSource location;
+        public bool reserved;
     }
 }

@@ -31,6 +31,8 @@ namespace Assets.Scripts.Managers
         private void Start()
         {
             _GridManager.Setup(11, 11);
+            _VillagersManager.AddVillager(new Vector2(Random.Range(-20f,20f), Random.Range(-20f, 20f)));
+            _VillagersManager.AddVillager(new Vector2(Random.Range(-20f, 20f), Random.Range(-20f, 20f)));
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Assets.Scripts.Helpers.Interfaces
 {
     internal interface IGridManager
     {
-        void AddCellObject(GridPosition position, CellObjectData cellObjectData);
+        void AddCellObject(CellObjectData cellObjectData);
         void Setup(int width, int height);
     }
 }

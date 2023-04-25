@@ -10,6 +10,25 @@ namespace Assets.Scripts.Grid
 {
     public abstract class CellObject : MonoBehaviour
     {
-        public abstract void Setup(CellObjectData objectData);
+        protected CellObjectData _objectData;
+        public virtual void Setup(CellObjectData objectData) {
+            _objectData = objectData;
+        }
+
+        private void OnEnable()
+        {
+            if (_objectData != null)
+                _objectData.CellObjectDataChanged += CellObjectDataChanged;
+        }
+
+        private void OnDisable()
+        {
+            if (_objectData != null)
+                _objectData.CellObjectDataChanged -= CellObjectDataChanged;
+        }
+
+        protected virtual void CellObjectDataChanged(object sender, CellObjectChangedEventArgs e)
+        {
+        }
     }
 }

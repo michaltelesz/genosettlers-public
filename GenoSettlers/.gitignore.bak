@@ -43,6 +43,7 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+.vsconfig
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -58,3 +59,13 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+#Proprietary code/assets
+/Assets/Animations/
+/Assets/Plugins/
+/Assets/Materials/External/
+/Assets/Models/
+/Assets/Prefabs Libs/
+/Assets/Prefabs/
+/Assets/TextMesh Pro/
+/Assets/Textures/

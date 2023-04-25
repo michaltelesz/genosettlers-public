@@ -8,6 +8,6 @@ namespace Assets.Scripts.DataModels
 
         private string _name;
         private Gender _gender;
-        private byte _age;
+        private float _age;
     }
 }

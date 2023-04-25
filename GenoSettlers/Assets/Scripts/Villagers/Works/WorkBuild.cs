@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Villagers.Works
 {
-    internal class WorkBuild : IWork
+    internal class WorkBuild : BasicWork
     {
+        public override bool Terminated { get; }
+
+        public override void InvokeStep(Villager villager)
+        {
+        }
     }
 }

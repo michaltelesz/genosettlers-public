@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03454fe106098a94a91002907fd92dc8, type: 3}
   m_Name: BasicHouse
   m_EditorClassIdentifier: 
-  _BuildingName: BasicHouse
-  _BuildingPrefab: {fileID: 1120796898009102570, guid: 0ea7810d4463693498c9b5b865a29329, type: 3}
+  _Id: 0
+  _BuildingPrefab: {fileID: 1120796898009102570, guid: 0ea7810d4463693498c9b5b865a29329,
+    type: 3}
   _Cost:
   - _Id: 1
-    _Amount: 10
+    _Amount: 9

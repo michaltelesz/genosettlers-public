@@ -13,7 +13,7 @@ namespace Assets.Scripts.Grid.GridObjects.Buildings
             if(objectData is BuildingData buildingData)
             {
                 Building building = Instantiate(buildingData.BuildingPrefab, transform);
-                building.Setup();
+                building.Setup(buildingData);
             }   
         }
     }

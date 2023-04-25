@@ -1208,6 +1208,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _VillagersContainer: {fileID: 1663216101}
+  _VillagersPrefabs:
+  - {fileID: -6431285149358314470, guid: 3a19f3d6d8d4b0147a0afe9a1452340b, type: 3}
+  - {fileID: -6431285149358314470, guid: 6e40166fcfcd4be47ad1dc282ee91dd9, type: 3}
 --- !u!1 &1285455073
 GameObject:
   m_ObjectHideFlags: 0

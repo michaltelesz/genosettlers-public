@@ -3,6 +3,7 @@ using Assets.Scripts.Helpers;
 using Assets.Scripts.Helpers.Interfaces;
 using Assets.Scripts.Helpers.Structs;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
@@ -13,9 +14,13 @@ namespace Assets.Scripts.DataModels
         private const int RESOURCES_STACK_SIZE = 5;
         public override string ObjectName => "ResourcesStack";
 
-        public System.Collections.ObjectModel.ReadOnlyCollection<ResourceAmount> Resources => _resources;
+        public ReadOnlyCollection<ResourceAmount> Resources => _resources;
 
-        private System.Collections.ObjectModel.ReadOnlyCollection<ResourceAmount> _resources = new System.Collections.ObjectModel.ReadOnlyCollection<ResourceAmount>(new ResourceAmount[RESOURCES_STACK_SIZE]);
+        private ReadOnlyCollection<ResourceAmount> _resources = new ReadOnlyCollection<ResourceAmount>(new ResourceAmount[RESOURCES_STACK_SIZE]);
+
+        public ResourcesStackData(GridPosition position) : base(position)
+        {
+        }
 
         internal int ChangeResourceAmount(uint resourceId, int amount, bool abortIncomplete = false)
         {
@@ -49,7 +54,7 @@ namespace Assets.Scripts.DataModels
             }
 
             _resources = new System.Collections.ObjectModel.ReadOnlyCollection<ResourceAmount>(resourcesCopy);
-            OnCellObjectChanged(new CellObjectChangedEventArgs());
+            OnCellObjectDataChanged(new CellObjectChangedEventArgs());
 
             return amount;
         }

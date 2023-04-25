@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.DataModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,6 @@ namespace Assets.Scripts.Grid.GridObjects.Buildings
 {
     public abstract class Building : MonoBehaviour
     {
-        public virtual void Setup()
-        {
-            
-        }
+        public abstract void Setup(BuildingData buildingData);
     }
 }

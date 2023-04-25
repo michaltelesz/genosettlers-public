@@ -9,12 +9,16 @@ namespace Assets.Scripts.DataModels
     public class BuildingData : CellObjectData
     {
         public Building BuildingPrefab => _buildingConfig.BuildingPrefab;
+        public float BuildingProgress => _buildingProgress;
+
+        public BuildingConfig BuildingConfig => _buildingConfig;
 
         private BuildingConfig _buildingConfig;
 
         private float _buildingProgress;
+        private List<IdAmount> _resources = new List<IdAmount>();
 
-        public BuildingData(BuildingConfig buildingConfig)
+        public BuildingData(GridPosition position, BuildingConfig buildingConfig) : base(position)
         {
             _buildingConfig = buildingConfig;
         }
