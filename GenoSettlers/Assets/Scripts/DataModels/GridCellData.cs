@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Events;
+using System;
 
 namespace Assets.Scripts.DataModels
 {
@@ -23,12 +24,13 @@ namespace Assets.Scripts.DataModels
         internal void AddCellObject(CellObjectData cellObjectData)
         {
             _objectData = cellObjectData;
-            CellDataChanged?.Invoke(this, new CellDataChangedEventArgs());
+            CellDataChanged?.Invoke(this, new CellDataChangedEventArgs(CellDataChangedEventArgs.EventType.AddObject));
         }
-    }
 
-    public class CellDataChangedEventArgs : EventArgs
-    {
-
+        internal void RemoveCellObject()
+        {
+            CellDataChanged?.Invoke(this, new CellDataChangedEventArgs(CellDataChangedEventArgs.EventType.RemoveObject));
+            _objectData = null;
+        }
     }
 }

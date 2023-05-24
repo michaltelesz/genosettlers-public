@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Helpers.Interfaces
 {
-    internal interface IGridManager
+    public interface IGridManager
     {
         void AddCellObject(CellObjectData cellObjectData);
-        void Setup(int width, int height);
+        bool HasGridObject(GridPosition gridPosition);
+        void Init(int width, int height);
     }
 }

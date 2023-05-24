@@ -3,12 +3,13 @@ using System;
 using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [Serializable]
 public struct GridPosition : IEquatable<GridPosition>
 {
-    private int _q;
-    private int _r;
+    private readonly int _q;
+    private readonly int _r;
 
     public int Q => _q;
     public int R => _r;
@@ -22,7 +23,7 @@ public struct GridPosition : IEquatable<GridPosition>
 
     public static GridPosition FromOffsetCoordinates(int x, int y)
     {
-        return new GridPosition(x, y - x / 2);
+        return new GridPosition(x, y - Mathf.FloorToInt(x / 2f));
     }
 
     public int DistanceTo(GridPosition other)
@@ -60,10 +61,10 @@ public struct GridPosition : IEquatable<GridPosition>
         return HashCode.Combine(this._q, this._r);
     }
 
-    public static GridPosition FromPixels(Vector2 position)
+    public static GridPosition FromPixels(Vector3 position)
     {
         float floatQ = position.x / (HexMetrics.outerRadius * 1.5f);
-        float floatR = position.y / (HexMetrics.innerRadius * 2f) - floatQ / 2;
+        float floatR = position.z / (HexMetrics.innerRadius * 2f) - floatQ * 0.5f;
         float floatS = -floatQ - floatR;
 
         int intQ = Mathf.RoundToInt(floatQ);
@@ -84,5 +85,15 @@ public struct GridPosition : IEquatable<GridPosition>
         }
 
         return new GridPosition(intQ, -intQ - intS);
+    }
+
+    internal Vector3 ToPixels()
+    {
+        return new Vector3()
+        {
+            x = _q * (HexMetrics.outerRadius * 1.5f),
+            y = 0f,
+            z = (_r + _q * 0.5f) * (HexMetrics.innerRadius * 2f)
+        };
     }
 }

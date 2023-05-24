@@ -1,5 +1,6 @@
 using Assets.Scripts.DataModels;
 using Assets.Scripts.DataModels.Configs;
+using Assets.Scripts.Events;
 using Assets.Scripts.Grid;
 using Assets.Scripts.Helpers;
 using System.Linq;
@@ -7,14 +8,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class GridCell : MonoBehaviour, IPointerClickHandler
+public class GridCell : MonoBehaviour
 {
     [SerializeField] private MeshFilter _MeshFilter;
     [SerializeField] private TMP_Text _Text;
     [SerializeField] private Color _Color;
     [SerializeField] private Transform _ObjectContainer;
 
-    private GridManager _grid;
     private Mesh _mesh;
     private Vector3[] _vertices;
     private int[] _triangles;
@@ -23,35 +23,29 @@ public class GridCell : MonoBehaviour, IPointerClickHandler
 
     public void Setup(GridCellData cellData, GridManager grid)
     {
-        _grid = grid;
         _cellData = cellData;
         _cellData.CellDataChanged += CellDataChanged;
 
         _MeshFilter.mesh = _mesh = new Mesh();
 
-        Vector3 position = new()
-        {
-            x = _cellData.Position.Q * (HexMetrics.outerRadius * 1.5f),
-            y = 0f,
-            z = (_cellData.Position.R + _cellData.Position.Q * .5f) * (HexMetrics.innerRadius * 2f)
-        };
+        Vector3 position = _cellData.Position.ToPixels();
 
         _renderer = _MeshFilter.GetComponent<MeshRenderer>();
         Color.RGBToHSV(_Color, out float h, out float s, out float v);
         Color newColor = Color.HSVToRGB(h, s + Random.Range(-.1f, .1f), v + Random.Range(-.1f, .1f));
         _renderer.material.color = newColor;
 
+        Trianglulate();
+
         MeshCollider collider = _MeshFilter.GetComponent<MeshCollider>();
         collider.sharedMesh = _mesh;
 
-        Trianglulate();
-
-        transform.position = position;
+        transform.localPosition = position;
         _Text.text = _cellData.Position.ToString();
 
         if(_cellData.ObjectData != null)
         {
-            CellObjectConfig cellObjectConfig = Context.GameConfig.CellObjects.SingleOrDefault(o => o.ObjectName == _cellData.ObjectData.ObjectName);
+            CellObjectConfig cellObjectConfig = GameContext.GameConfig.CellObjects.SingleOrDefault(o => o.ObjectName == _cellData.ObjectData.ObjectName);
             if(cellObjectConfig != null)
             {
                 CellObject cellObject = Instantiate(cellObjectConfig.ObjectPrefab, _ObjectContainer);
@@ -91,33 +85,32 @@ public class GridCell : MonoBehaviour, IPointerClickHandler
         _mesh.RecalculateNormals();
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        Ray inputRay = Camera.main.ScreenPointToRay(eventData.position);
-        if (Physics.Raycast(inputRay, out RaycastHit hit))
-        {
-            GridPosition gridPosition = GridPosition.FromPixels(new Vector2(hit.point.x, hit.point.z));
-            Debug.Log(gridPosition);
-        }
-        
-        _grid.MoveCameraTo(transform.position);
-        //TODO Move somewhere to GameManager
-        {
-            BuildingData buildingData = new BuildingData(_cellData.Position, Context.GameConfig.Buildings[0]);
-            _grid.AddCellObject(buildingData);
-        }
-    }
-
     private void CellDataChanged(object sender, CellDataChangedEventArgs e)
     {
-        if (_cellData.ObjectData != null && _ObjectContainer.childCount == 0)
+        switch(e.Type)
         {
-            CellObjectConfig cellObjectConfig = Context.GameConfig.CellObjects.SingleOrDefault(o => o.ObjectName == _cellData.ObjectData.ObjectName);
-            if (cellObjectConfig != null)
-            {
-                CellObject cellObject = Instantiate(cellObjectConfig.ObjectPrefab, _ObjectContainer);
-                cellObject.Setup(_cellData.ObjectData);
-            }
+            case CellDataChangedEventArgs.EventType.AddObject:
+                {
+                    if (_cellData.ObjectData != null && _ObjectContainer.childCount == 0)
+                    {
+                        CellObjectConfig cellObjectConfig = GameContext.GameConfig.CellObjects.SingleOrDefault(o => o.ObjectName == _cellData.ObjectData.ObjectName);
+                        if (cellObjectConfig != null)
+                        {
+                            CellObject cellObject = Instantiate(cellObjectConfig.ObjectPrefab, _ObjectContainer);
+                            cellObject.Setup(_cellData.ObjectData);
+                        }
+                    }
+                    break;
+                }
+
+            case CellDataChangedEventArgs.EventType.RemoveObject:
+                {
+                    foreach(Transform transform in _ObjectContainer)
+                    {
+                        Destroy(transform.gameObject);
+                    }
+                    break;
+                }
         }
     }
 }

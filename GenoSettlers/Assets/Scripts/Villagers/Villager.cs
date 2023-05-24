@@ -1,9 +1,11 @@
 using Assets.Scripts.DataModels;
 using Assets.Scripts.Helpers.Interfaces;
+using Assets.Scripts.Helpers.Interfaces.Resources;
+using Assets.Scripts.Helpers.Structs;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Villager : MonoBehaviour
 {
@@ -11,11 +13,17 @@ public class Villager : MonoBehaviour
 
     private IWork _currentWork;
 
-    public IWork CurrentWork => _currentWork;
+    public bool WaitingForWork => _currentWork == null || _currentWork.Terminated;
 
-    internal void InvokeWorkStep()
+    public ReadOnlyCollection<ResourceAmount> Resources => throw new NotImplementedException();
+
+    internal void InvokeWorkStep(float deltaTime)
     {
-        //Debug.Log($"Villager: {name}, Work: {CurrentWork.GetType()}");
+        _currentWork.InvokeStep(this, deltaTime);
+    }
+
+    internal void Setup()
+    {
     }
 
     internal bool SetWork(IWork work)

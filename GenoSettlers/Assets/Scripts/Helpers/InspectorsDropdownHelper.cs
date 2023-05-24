@@ -18,9 +18,9 @@ namespace Assets.Scripts.Helpers
             get
             {
                 ValueDropdownList<ResourceAmount> resources = new ValueDropdownList<ResourceAmount>();
-                if (Context.GameConfig != null)
+                if (GameContext.GameConfig != null)
                 {
-                    foreach (var item in Context.GameConfig.Resources)
+                    foreach (var item in GameContext.GameConfig.Resources)
                     {
                         resources.Add($"{item.name}", new ResourceAmount(item, 0));
                     }

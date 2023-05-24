@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.DataModels;
+using Assets.Scripts.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace Assets.Scripts.Grid
                 _objectData.CellObjectDataChanged -= CellObjectDataChanged;
         }
 
-        protected virtual void CellObjectDataChanged(object sender, CellObjectChangedEventArgs e)
+        protected virtual void CellObjectDataChanged(object sender, CellObjectDataChangedEventArgs e)
         {
         }
     }

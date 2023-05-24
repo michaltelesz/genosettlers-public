@@ -13,13 +13,13 @@ namespace Assets.Scripts.Villagers.Works
         {
             get; private set;
         }
-        public abstract bool Terminated { get; }
+        public abstract bool Terminated { get; protected set; }
 
         public void Begin()
         {
             InProgress = true;
         }
 
-        public abstract void InvokeStep(Villager villager);
+        public abstract void InvokeStep(Villager villager, float deltaTime);
     }
 }

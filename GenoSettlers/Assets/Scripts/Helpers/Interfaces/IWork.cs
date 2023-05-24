@@ -14,6 +14,6 @@ namespace Assets.Scripts.Helpers.Interfaces
         bool InProgress { get; }
 
         void Begin();
-        void InvokeStep(Villager villager);
+        void InvokeStep(Villager villager, float deltaTime);
     }
 }

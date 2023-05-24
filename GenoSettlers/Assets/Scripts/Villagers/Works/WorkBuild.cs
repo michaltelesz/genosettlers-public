@@ -9,9 +9,9 @@ namespace Assets.Scripts.Villagers.Works
 {
     internal class WorkBuild : BasicWork
     {
-        public override bool Terminated { get; }
+        public override bool Terminated { get; protected set; }
 
-        public override void InvokeStep(Villager villager)
+        public override void InvokeStep(Villager villager, float deltaTime)
         {
         }
     }

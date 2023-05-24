@@ -1,5 +1,7 @@
 using Assets.Scripts.DataModels;
+using Assets.Scripts.Events;
 using Assets.Scripts.Grid;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,24 +12,41 @@ public class ResourcesStack : CellObject
 
     public override void Setup(CellObjectData objectData)
     {
-        if(objectData is ResourcesStackData data)
+        if (objectData is ResourcesStackData data)
         {
             for (int i = 0; i < _Slots.Length; i++)
             {
-                if (data.Resources.Count < i)
-                    return;
-
-                foreach(GameObject child in _Slots[i])
+                if (data.ResourcesSlots.Count < i || data.ResourcesSlots[i]?.Resource == null)
                 {
-                    Destroy(child);
+                    ClearSlot(_Slots[i]);
+                    continue;
                 }
 
-                if (data.Resources[i].Resource == null)
-                    continue;
+                ResourcePile pile = _Slots[i].GetComponentInChildren<ResourcePile>();
+                if (pile == null || pile.ResourceId != data.ResourcesSlots[i].Resource.Id)
+                {
+                    ClearSlot(_Slots[i]);
+                    pile = Instantiate(data.ResourcesSlots[i].Resource.ResourcePilePrefab, _Slots[i]);
+                }
 
-                ResourcePile pile = Instantiate(data.Resources[i].Resource.ResourcePilePrefab, _Slots[i]);
-                pile.Setup(data.Resources[i].Amount);
+                pile.Setup(data.ResourcesSlots[i]);
             }
+        }
+    }
+
+    private void ClearSlot(Transform transform)
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    protected override void CellObjectDataChanged(object sender, CellObjectDataChangedEventArgs e)
+    {
+        if (sender is ResourcesStackData data)
+        {
+            Setup(data);
         }
     }
 }

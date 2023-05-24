@@ -1,5 +1,4 @@
 using Assets.Scripts.DataModels.Configs;
-using Mono.Cecil;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -20,7 +19,7 @@ namespace Assets.Scripts.Helpers.Structs
 
             return Resource.name;
         }
-        public ResourceConfig Resource => Context.GameConfig.Resources.FirstOrDefault(c => c.Id == _Id);
+        public ResourceConfig Resource => GameContext.GameConfig.Resources.FirstOrDefault(c => c.Id == _Id);
 
         public ResourceAmount(ResourceConfig resource, int amount) : base(resource.Id, amount) { }
 

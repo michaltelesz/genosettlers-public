@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Helpers
 {
-    public static class Context
+    public static class GameContext
     {
         private static GameConfig _GameConfig;
 

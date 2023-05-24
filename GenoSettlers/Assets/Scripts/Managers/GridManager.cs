@@ -1,10 +1,8 @@
 using Assets.Scripts.DataModels;
-using Assets.Scripts.DataModels.Configs;
-using Assets.Scripts.Grid.GridObjects.Buildings;
-using Assets.Scripts.Helpers;
 using Assets.Scripts.Helpers.Interfaces;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GridManager : MonoBehaviour, IGridManager
 {
@@ -15,35 +13,46 @@ public class GridManager : MonoBehaviour, IGridManager
     [SerializeField] CameraController _CameraController;
 
     private Dictionary<GridPosition, GridCellData> _gridCells = new Dictionary<GridPosition, GridCellData>();
+    private int _width, _height;
+    private int _widthOffset => Mathf.FloorToInt(_width / 2f);
+    private int _heightOffset => Mathf.FloorToInt(_height / 2f);
 
-    public void Setup(int width, int height)
+    public void Init(int width, int height)
     {
-        int widthOffset = width / 2;
-        int heightOffset = height / 2 - width / 4;
+        _width = width;
+        _height = height;
 
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                GridPosition position = GridPosition.FromOffsetCoordinates(i - widthOffset, j - heightOffset);
+                GridPosition position = GridPosition.FromOffsetCoordinates(i - _widthOffset, j - _heightOffset);
                 GridCellData cellData = new GridCellData(position);
                 _gridCells.Add(position, cellData);
-
-                if (position.DistanceTo(0, 0, 0) > 2 && Random.Range(0, 1f) < 0.9f)
-                {
-                    AddCellObject(new CellObjectData(position, "Forest"));
-                }
             }
         }
-
-        ResourcesStackData resourcesStack = new ResourcesStackData(new GridPosition(0, 0));
-        resourcesStack.ChangeResourceAmount(1, 16);
-        AddCellObject(resourcesStack);
 
         foreach (GridCellData gridCellData in _gridCells.Values)
         {
             GridCell cell = Instantiate(_CellPrefab, _CellsContainer);
-            cell.Setup(gridCellData,this);
+            cell.Setup(gridCellData, this);
+        }
+
+        Populate();
+    }
+
+    private void Populate()
+    {
+        for (int i = 0; i < _width; i++)
+        {
+            for (int j = 0; j < _height; j++)
+            {
+                GridPosition position = GridPosition.FromOffsetCoordinates(i - _widthOffset, j - _heightOffset);
+                if (position.DistanceTo(0, 0, 0) > 3 && Random.Range(0, 1f) < 0.9f)
+                {
+                    AddCellObject(new CellObjectData(position, "Forest"));
+                }
+            }
         }
     }
 
@@ -54,6 +63,20 @@ public class GridManager : MonoBehaviour, IGridManager
 
     public void AddCellObject(CellObjectData cellObjectData)
     {
-        _gridCells[cellObjectData.Postion].AddCellObject(cellObjectData);
+        _gridCells[cellObjectData.Position].AddCellObject(cellObjectData);
+    }
+
+    public void RemoveCellObject(GridPosition position)
+    {
+        _gridCells[position].RemoveCellObject();
+    }
+
+    public bool HasGridObject(GridPosition gridPosition)
+    {
+        _gridCells.TryGetValue(gridPosition, out GridCellData cellObject);
+        if(cellObject == null || cellObject.ObjectData == null)
+            return false;
+
+        return true;
     }
 }

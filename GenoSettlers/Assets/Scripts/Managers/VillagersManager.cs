@@ -20,6 +20,7 @@ public class VillagersManager : MonoBehaviour, IVillagersManager
         if(_VillagersPrefabs.Count > 0)
         {
             Villager newVillager = Instantiate(_VillagersPrefabs[Random.Range(0, _VillagersPrefabs.Count())], _VillagersContainer);
+            newVillager.Setup();
             newVillager.transform.localPosition = new Vector3(position.x, 0, position.y);
             _villagers.Add(newVillager);
         }   
@@ -29,7 +30,7 @@ public class VillagersManager : MonoBehaviour, IVillagersManager
     {
         foreach(Villager villager in _villagers)
         {
-            if(villager.CurrentWork == null || villager.CurrentWork.Terminated)
+            if(villager.WaitingForWork)
             {
                 IWork work = GetNextWork();
                 if (work == null)
@@ -39,7 +40,7 @@ public class VillagersManager : MonoBehaviour, IVillagersManager
                 work.Begin();
 
             }
-            villager.InvokeWorkStep();
+            villager.InvokeWorkStep(Time.deltaTime);
         }
     }
 
